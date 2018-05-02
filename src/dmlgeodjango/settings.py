@@ -3,9 +3,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-import dotenv
 import dj_database_url
-
+# import dotenv
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) # src
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__)) # dmlgeodjango
@@ -117,8 +116,9 @@ if LOCALE == 'linux':
 
 elif LOCALE == 'windows':
     ALLOWED_HOSTS = ['LOCALHOST', '0.0.0.0', '127.0.0.1']
-    GDAL_LIBRARY_PATH = os.getenv('GDAL_LIBRARY_PATH')
-    GEOS_LIBRARY_PATH = os.getenv('GEOS_LIBRARY_PATH')
+    # GDAL_LIBRARY_PATH = R'C:\OSGeo4W\bin\gdal111.dll'
+    GDAL_LIBRARY_PATH = os.getenv(R'GDAL_LIBRARY_PATH')  #; print(GDAL_LIBRARY_PATH)
+    GEOS_LIBRARY_PATH = os.getenv(R'GEOS_LIBRARY_PATH')  #; print(GEOS_LIBRARY_PATH)
     DEBUG = True
 
 
