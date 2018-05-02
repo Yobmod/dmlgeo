@@ -19,21 +19,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) # src
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__)) # dmlgeodjango
 GIT_DIR = os.path.dirname(BASE_DIR)
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ['SECRET_KEY']
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = os.environ['HOSTS']
-
-
-
-# GEOS_LIBRARY_PATH = R'C:\OSGeo4W64\bin\geos_c.dll'
-# GDAL_LIBRARY_PATH = R'C:\OSGeo4W64\bin\gdal202.dll'
+LOCALE = os.environ['LOCALE']  # ; print(LOCALE)
 
 
 INSTALLED_APPS = [
@@ -84,15 +71,44 @@ TEMPLATES = [
 WSGI_APPLICATION = 'dmlgeodjango.wsgi.application'
 
 
+if LOCALE == 'linux':
+    ALLOWED_HOSTS = ['LOCALHOST', '0.0.0.0', '127.0.0.1']  
+    DEBUG = True
+
+
+elif LOCAL == 'windows':
+    ALLOWED_HOSTS = ['LOCALHOST', '0.0.0.0', '127.0.0.1']
+    # GEOS_LIBRARY_PATH = R'C:\OSGeo4W64\bin\geos_c.dll'
+    # GDAL_LIBRARY_PATH = R'C:\OSGeo4W64\bin\gdal202.dll'  
+    DEBUG = True
+
+elif LOCALE == 'heroku':
+    ALLOWED_HOSTS = ['dmlgeo.herokuapp.com']  
+    DEBUG = False
+
+else: 
+    DEBUG == False
+
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+
+DATABASES = {
+    'default': {
+         'ENGINE': 'django.contrib.gis.db.backends.postgis',
+         'NAME': 'dmlgeo',
+         'USER': 'yobmod',
+    },
+}
+
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+"""
 
 
 # Password validation
