@@ -33,6 +33,10 @@ pip freeze -r requirements.txt		//compare installed apps vs reqs
 pip freeze | xargs pip uninstall -y 	//remove all pip installs
 
 
+sudo apt-get update
+sudo apt-get install <application_name>
+sudo apt-get remove <application_name>
+
 
 git add --all
 git commit -m "xxxxx"
@@ -54,9 +58,4 @@ heroku logs
 
 heroku create --ssh-git     //creates a git?
 heroku keys:add         //add ssh
-git config --global url.ssh://git@heroku.com/.insteadOf https://git.heroku.com/
-
-
-win64:
-    GDAL(core): http://www.gisinternals.com/query.html?content=filelist&file=release-1900-gdal-2-2-3-mapserver-7-0-7.zip
-    GDAL (py3.4)
+git config --global url.ssh://git@heroku.com/.instead of https://git.heroku.com/

@@ -3,11 +3,15 @@ import os
 import sys
 import dotenv
 
+ENV_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  #; print(ENV_DIR)
+
 if __name__ == "__main__":
     try:
-        dotenv.read_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'))
+        dotenv.read_dotenv(os.path.join(ENV_DIR, '.env'))
+        print('Reading environmental variables from .env')
     except Exception as exc:
-        print(exc)
+        print('Local .env file not found:' + exc)
+        
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dmlgeodjango.settings")
     try:
         from django.core.management import execute_from_command_line
