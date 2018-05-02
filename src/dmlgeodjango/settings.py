@@ -14,31 +14,27 @@ import os
 import dotenv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) # src
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__)) # dmlgeodjango
+GIT_DIR = os.path.dirname(BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "k"  # os.environ['SECRET_KEY']
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [] #  [os.environ['HOSTS']]
-
-import ctypes
-ctypes.windll.LoadLibrary(R"C:\OSGeo4W64\bin\proj.dll")
-ctypes.windll.LoadLibrary(R"C:\OSGeo4W64\bin\expat.dll")
-ctypes.windll.LoadLibrary(R"C:\OSGeo4W64\bin\ogdi.dll")
+ALLOWED_HOSTS = os.environ['HOSTS']
 
 
-GEOS_LIBRARY_PATH = R'C:\OSGeo4W64\bin\geos_c.dll'
-GDAL_LIBRARY_PATH = R'C:\OSGeo4W64\bin\gdal202.dll'
-# GDAL_LIBRARY_PATH = R'C:\OSGeo4W64\bin\gdal202'
-# Application definition
+
+# GEOS_LIBRARY_PATH = R'C:\OSGeo4W64\bin\geos_c.dll'
+# GDAL_LIBRARY_PATH = R'C:\OSGeo4W64\bin\gdal202.dll'
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
