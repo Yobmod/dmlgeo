@@ -3,7 +3,7 @@ import os
 import sys
 import dotenv
 
-ENV_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  #; print(ENV_DIR)
+ENV_DIR = os.path.dirname(os.path.abspath(__file__))  #; print(ENV_DIR)
 
 if __name__ == "__main__":
     try:
