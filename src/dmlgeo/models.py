@@ -1,6 +1,7 @@
 """https://docs.djangoproject.com/en/2.0/ref/contrib/gis/model-api/"""
 
 from django.contrib.gis.db import models
+from django.db.models import Manager as GeoManager
 
 class WorldBorder(models.Model):
     # Regular Django fields corresponding to the attributes in the world borders shapefile.
@@ -50,7 +51,7 @@ class Waypoint(models.Model):
 
     name = models.CharField(max_length=32)
     geometry = models.PointField(srid=4326)
-    objects = models.GeoManager()
+    objects = GeoManager()
 
     def __str__(self) -> str:
         return '{} {} {}'.format(self.name, self.geometry.x, self.geometry.y)

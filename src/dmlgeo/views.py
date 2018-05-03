@@ -14,7 +14,7 @@ def waypoints_index(request: HttpRequest) -> HttpResponse:
     waypoints = Waypoint.objects.order_by('name')
     context = {
                 'waypoints': waypoints,
-                'content': render_to_string('waypoints/waypoints.html', {'waypoints': waypoints}),
+                'content': render_to_string('dmlgeo/waypoints.html', {'waypoints': waypoints}),
     }
     return render(request, 'dmlgeo/waypoints_index.html', {})
 
