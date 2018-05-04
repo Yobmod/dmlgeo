@@ -105,7 +105,7 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-
+GOOGLE_MAP_API_KEY = os.environ['GOOGLE_MAP_API_KEY']
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
