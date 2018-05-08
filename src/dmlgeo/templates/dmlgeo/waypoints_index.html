@@ -2,7 +2,7 @@
 {% load staticfiles %}
 <html>
 <head>
-    <script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
+    <script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
 
     <script>
         var map;
@@ -14,7 +14,40 @@
             });
         }
     </script>
-    <script>
+
+<script>
+function getCookie(name) { 
+    var cookieValue = null; 
+    if (document.cookie && document.cookie !== '') { var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) { 
+            var cookie=jQuery.trim(cookies[i]); 
+            if (cookie.substring(0, name.length + 1)===(name + '=')) { 
+                cookieValue=decodeURIComponent(cookie.substring(name.length + 1)); 
+            break; 
+            } 
+        } 
+    } 
+    return cookieValue; 
+} 
+
+var csrftoken=getCookie( 'csrftoken');
+console.log(csrftoken)
+
+function csrfSafeMethod(method) { 
+    // these HTTP methods do not require CSRF protection 
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+$.ajaxSetup({ 
+    beforeSend: function(xhr, settings) { 
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) { 
+            xhr.setRequestHeader("X-CSRFToken", csrftoken); 
+        } 
+    } 
+});
+</script>
+
+<script>
         var marker;
         var waypointByID = {};
         {% for waypoint in waypoints %}
@@ -25,24 +58,60 @@
             };
         {% endfor %}
 
-        $(document).ready(function () {
-            function activateWaypoints() {
-                // Add waypoint click handler
-                $('.waypoint').each(function () {
-                    $(this).click(function () {
-                        var waypoint = waypointByID[this.id];
-                        var center = new google.maps.LatLng(waypoint.lat, waypoint.lng);
-                        if (marker) marker.setMap();
-                        marker = new google.maps.Marker({ map: map, position: center });
-                        map.panTo(center);
-                    }).hover(
-                        function () { this.className = this.className.replace('OFF', 'ON'); },
-                        function () { this.className = this.className.replace('ON', 'OFF'); }
-                    );
-                });
-            }
-            activateWaypoints();
-        });
+
+var currentObject; 
+$(document).ready(function () { 
+    function activateWaypoints() { 
+        // Add waypoint click handler 
+        $('.waypoint').each(function() { 
+            $(this).click(function() { 
+                var waypoint = waypointByID[this.id]; 
+                var center = new google.maps.LatLng(waypoint.lat, waypoint.lng);
+                currentObject = $(this); 
+                if (marker) marker.setMap(); 
+                marker = new google.maps.Marker({map: map, position: center, draggable: true});
+                google.maps.event.addListener(marker, 'dragend', function() { 
+                    var position = marker.getPosition(); 
+                    waypoint.lat = position.lat(); 
+                    waypoint.lng = position.lng(); 
+                    currentObject.html(waypoint.name + 
+                    ' (' + waypoint.lat + 
+                    ', ' + waypoint.lng + ')'); 
+                    $('#saveWaypoints').removeAttr('disabled'); 
+                }); 
+                map.panTo(center); 
+            }).hover(
+                    function () {this.className = this.className.replace('OFF', 'ON');}, 
+                    function () {this.className = this.className.replace('ON', 'OFF');} 
+            ); 
+        }); 
+    } 
+    $('#saveWaypoints').click(function () { 
+        var waypointStrings = []; 
+        for (id in waypointByID) { 
+            waypoint = waypointByID[id]; 
+            waypointStrings.push(id + ' ' + waypoint.lng + ' ' + waypoint.lat); 
+        }; 
+    $.ajax({ 
+        type: "POST", 
+        url: "{% url 'dmlgeo:waypoints_save' %}",
+        data: { 'waypointsPayload': waypointStrings.join('\n') },
+        success: function (data) { 
+            if (data.isOk) { 
+                $('#saveWaypoints').attr('disabled', 'disabled'); } 
+            else { console.log('posted waypoint'); }  //alert(data); } 
+        },
+    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+    dataType: 'json',
+    });
+ });
+    /*$.post("{% url 'dmlgeo:waypoints_save' %}", // type: 'POST', url: "{% url 'dmlgeo:waypoints_save' %}",
+            { waypointsPayload: waypointStrings.join('\n') }, // data: <this dict>,
+             function (data) { if (data.isOk) { $('#saveWaypoints').attr('disabled', 'disabled'); } else { alert(data.message); } },
+            ); 
+        }); */
+    activateWaypoints();
+});
     </script>
 
 <script async defer src="https://maps.googleapis.com/maps/api/js?key={{google_map_api_key}}&callback=initialize"></script>
@@ -74,13 +143,9 @@
 <body onload='initialize()'>
     <div id=map></div>
     <div id=waypoints>
-        {% for waypoint in waypoints %}
-            <div id={ {waypoint.id}} class='waypoint linkOFF'>
-            {{waypoint.name}}({{waypoint.geometry.y}}, {{waypoint.geometry.x}})
-            </div>
-        {% endfor %}
+        {{content}}
     </div>
-
+    <input id=saveWaypoints type=button value=Save disabled=disabled>
 </body>
 
 
